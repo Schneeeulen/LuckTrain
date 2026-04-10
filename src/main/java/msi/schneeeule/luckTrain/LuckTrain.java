@@ -1,19 +1,16 @@
 package msi.schneeeule.luckTrain;
 
 import msi.schneeeule.luckTrain.Events.Bus;
-import msi.schneeeule.luckTrain.System.UserPermissions;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class LuckTrain extends JavaPlugin {
 
     private static LuckTrain instance;
-    private static UserPermissions userPermissions;
 
     @Override
     public void onEnable() {
         // Plugin startup logic
         instance = this;
-        userPermissions = new UserPermissions();
         Bus.eventBus(instance);
     }
 
@@ -29,7 +26,4 @@ public final class LuckTrain extends JavaPlugin {
         return instance;
     }
 
-    public static UserPermissions getUserPermissions() {
-        return userPermissions;
-    }
 }

@@ -12,11 +12,16 @@ import java.time.Duration;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
-public class UserPermissions {
+public class UserPermissionsUtil {
+    private static final LuckPerms api = LuckPermsProvider.get();
+
+    private UserPermissionsUtil() {
+        // Utility class
+    }
+
 
     // check if the user has permanent access to a permission, either through direct assignment or via a permanent group
-    public boolean hasLifetimePermission(Player player, String permission) {
-        LuckPerms api = LuckPermsProvider.get();
+    public static boolean hasLifetimePermission(Player player, String permission) {
         User user = api.getUserManager().getUser(player.getUniqueId());
         if (user == null) {
             return false;
@@ -51,8 +56,7 @@ public class UserPermissions {
 
 
     // the time remaining until all accesses for this permission have expired
-    public String getFormattedPermissionTime(Player player, String permission) {
-        LuckPerms api = LuckPermsProvider.get();
+    public static String getFormattedPermissionTime(Player player, String permission) {
         User user = api.getUserManager().getUser(player.getUniqueId());
 
         if (user == null) {
@@ -119,8 +123,7 @@ public class UserPermissions {
     }
 
     // the time remaining until all accesses for this permission have expired
-    public PermissionTime getPermissionTime(Player player, String permission) {
-        LuckPerms api = LuckPermsProvider.get();
+    public static PermissionTime getPermissionTime(Player player, String permission) {
         User user = api.getUserManager().getUser(player.getUniqueId());
 
         if (user == null) {
@@ -184,9 +187,7 @@ public class UserPermissions {
     // Async:
 
     // check if the user has permanent access to a permission, either through direct assignment or via a permanent group
-    public CompletableFuture<Boolean> hasLifetimePermission(UUID uuid, String permission) {
-        LuckPerms api = LuckPermsProvider.get();
-
+    public static CompletableFuture<Boolean> hasLifetimePermission(UUID uuid, String permission) {
         return api.getUserManager().loadUser(uuid).thenApply(user -> {
             for (Node node : user.getNodes()) {
                 if (node.getKey().equalsIgnoreCase(permission)) {
@@ -214,9 +215,7 @@ public class UserPermissions {
     }
 
     // the time remaining until all accesses for this permission have expired
-    public CompletableFuture<String> getFormatedPermissionTime(UUID uuid, String permission) {
-        LuckPerms api = LuckPermsProvider.get();
-
+    public static CompletableFuture<String> getFormatedPermissionTime(UUID uuid, String permission) {
         return api.getUserManager().loadUser(uuid).thenApply(user -> {
             if (user == null) {
                 return null;
@@ -283,12 +282,10 @@ public class UserPermissions {
     }
 
     // the time remaining until all accesses for this permission have expired
-    public record PermissionTime(long days, long hours, long minutes, long seconds) {}
+    public static record PermissionTime(long days, long hours, long minutes, long seconds) {}
 
     // the time remaining until all accesses for this permission have expired
-    public CompletableFuture<PermissionTime> getPermissionTime(UUID uuid, String permission) {
-        LuckPerms api = LuckPermsProvider.get();
-
+    public static CompletableFuture<PermissionTime> getPermissionTime(UUID uuid, String permission) {
         return api.getUserManager().loadUser(uuid).thenApply(user -> {
             if (user == null) {
                  return null;
@@ -349,9 +346,7 @@ public class UserPermissions {
     }
 
     // the time remaining until all accesses for this permission have expired
-    public CompletableFuture<Duration> getPermissionDuration(UUID uuid, String permission) {
-        LuckPerms api = LuckPermsProvider.get();
-
+    public static CompletableFuture<Duration> getPermissionDuration(UUID uuid, String permission) {
         return api.getUserManager().loadUser(uuid).thenApply(user -> {
             if (user == null) {
                 return null;
@@ -403,16 +398,14 @@ public class UserPermissions {
     }
 
     // check if the user has access to a permission, either through direct assignment or via a permanent group
-    public CompletableFuture<Boolean> hasPermission(UUID uuid, String permission) {
-        return LuckPermsProvider.get().getUserManager().loadUser(uuid).thenApply(user -> {
+    public static CompletableFuture<Boolean> hasPermission(UUID uuid, String permission) {
+        return api.getUserManager().loadUser(uuid).thenApply(user -> {
             if (user == null) return false;
             return user.getCachedData().getPermissionData().checkPermission(permission).asBoolean();
         });
     }
 
-    public CompletableFuture<Boolean> hasSubPermissionOf(UUID uuid, String permission) {
-        LuckPerms api = LuckPermsProvider.get();
-
+    public static CompletableFuture<Boolean> hasSubPermissionOf(UUID uuid, String permission) {
         return api.getUserManager().loadUser(uuid).thenApply(user -> {
             for (Node node : user.getNodes()) {
                 if (node.getKey().startsWith(permission)) {
