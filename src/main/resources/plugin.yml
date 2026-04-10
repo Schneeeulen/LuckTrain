@@ -1,0 +1,5 @@
+name: LuckTrain
+version: '${project.version}'
+main: msi.schneeeule.luckTrain.LuckTrain
+api-version: '1.20'
+authors: [ Schneeeule_ ]
